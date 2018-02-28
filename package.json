@@ -17,8 +17,11 @@
     "url": "https://github.com/michaelliao/learn-javascript.git"
   },
   "dependencies": {
-    "koa": "2.0.0",
+    "bluebird": "^3.5.1",
+    "koa": "^2.0.0",
     "koa-bodyparser": "^4.2.0",
-    "koa-router": "^7.2.1"
+    "koa-router": "^7.2.1",
+    "randomstring": "^1.1.5",
+    "redis": "^2.8.0"
   }
 }
