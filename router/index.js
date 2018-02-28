@@ -1,5 +1,6 @@
 const router = require('koa-router')();
 const randomstr = require('randomstring');
+const md5 = require('md5')
 var redis = require('redis');
 const bluebird =require('bluebird');
 bluebird.promisifyAll(redis.RedisClient.prototype);
@@ -15,16 +16,15 @@ router.get('/', async(ctx)=> {
   const start = new Date;
   let i =0;
   let list = [];
-  while(i<100000){
-    let ran = randomstr.generate(3)
-    // list.push(client.hsetAsync("hash key", i,ran));
+  while(i<500000){
+    let ran = Math.random()*1000000;
+    list.push(i)
+    list.push(md5(ran))
     i++
-    list.push(ran)
   }
-
-  const promises = list.map((v,i)=>{client.hsetAsync("hash key",i,v)})
-  const mss = new Date - start;
-  console.log('%s %s - %s', this.method, this.url, mss);
+  await client.hmsetAsync('hash key',list).then((rs)=>{
+    console.log(rs)
+  })
  
 });
 
@@ -53,11 +53,6 @@ router.get('/result/:slice', async(ctx,next)=>{
 router.get('/getCount', async(ctx)=>{
   client.pfcount('data',redis.print);
 });
-router.get('/setSameValue', function *(next) {
-  for(let i=0;i<=1000;i++){
-    client.hmset("hash key",i+70000,'5f97AXF69U34',i+80000,'bMLISvd0Y4E0',i+90000,'whGcxFvOIfW0');
-  }
- 
-});
+
 
 module.exports = router;
